@@ -3,20 +3,27 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemeContext } from '../context/ThemeContext';
 import { LanguageContext } from '../context/LanguageContext';
-import DashboardTab from '../screens/DashboardTab.js';
-import CourseScheduleTab from '../screens/CourseScheduleTab.js';
-import AssignmentsTab from '../screens/AssignmentsTab.js';
-import GradesTab from '../screens/GradesTab.js';
-import RemindersTab from '../screens/RemindersTab.js';
-import StudyPlannerTab from '../screens/StudyPlannerTab.js';
-import ResourcesTab from '../screens/ResourcesTab.js';
-import SettingsTab from '../screens/SettingsTab.js';
+import { useAuth } from '../context/AuthContext';
+import DashboardTab from '../screens/Dashboard.js';
+import ProfileTab from '../screens/Profilee';  // Profile ekran
+import CourseScheduleTab from '../screens/CourseSchedule.js';
+import AssignmentsTab from '../screens/Assignments.js';
+import GradesTab from '../screens/Grades.js';
+import RemindersTab from '../screens/Reminders.js';
+import StudyPlannerTab from '../screens/StudyPlanner.js';
+import ResourcesTab from '../screens/Resources.js';
+import SettingsTab from '../screens/Settings.js';
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
   const { darkMode } = useContext(ThemeContext);
   const { language } = useContext(LanguageContext);
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return null;  // Përdoruesi duhet të jetë i loguar për të parë këtë ekran
+  }
 
   return (
     <Tab.Navigator
@@ -26,6 +33,16 @@ export default function TabNavigator() {
         tabBarStyle: { backgroundColor: darkMode ? "#222" : "#fff" },
       }}
     >
+      {/* Profile është i pari */}
+      <Tab.Screen
+        name="Profile"
+        component={ProfileTab}
+        options={{
+          tabBarLabel: language === 'shqip' ? "Profili" : "Profile",
+          tabBarIcon: ({ color }) => <Ionicons name="person" size={24} color={color} />,
+        }}
+      />
+      {/* Dashboard është i dyti */}
       <Tab.Screen
         name="Dashboard"
         component={DashboardTab}
@@ -34,6 +51,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="home" size={24} color={color} />,
         }}
       />
+      {/* Orari */}
       <Tab.Screen
         name="Orari"
         component={CourseScheduleTab}
@@ -42,6 +60,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="calendar" size={24} color={color} />,
         }}
       />
+      {/* Detyrat */}
       <Tab.Screen
         name="Detyrat"
         component={AssignmentsTab}
@@ -50,6 +69,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="clipboard" size={24} color={color} />,
         }}
       />
+      {/* Notat */}
       <Tab.Screen
         name="Notat"
         component={GradesTab}
@@ -58,6 +78,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="stats-chart" size={24} color={color} />,
         }}
       />
+      {/* Kujtesat */}
       <Tab.Screen
         name="Kujtesat"
         component={RemindersTab}
@@ -66,6 +87,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="alarm" size={24} color={color} />,
         }}
       />
+      {/* Studime */}
       <Tab.Screen
         name="Studime"
         component={StudyPlannerTab}
@@ -74,6 +96,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="book" size={24} color={color} />,
         }}
       />
+      {/* Burime */}
       <Tab.Screen
         name="Burime"
         component={ResourcesTab}
@@ -82,6 +105,7 @@ export default function TabNavigator() {
           tabBarIcon: ({ color }) => <Ionicons name="folder" size={24} color={color} />,
         }}
       />
+      {/* Cilësimet */}
       <Tab.Screen
         name="Cilesimet"
         component={SettingsTab}

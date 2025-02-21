@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, Switch, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Switch, Button, StyleSheet, Alert, TouchableOpacity, BackHandler } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext';
 import { LanguageContext } from '../context/LanguageContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +9,7 @@ export default function SettingsTab() {
   const { language, toggleLanguage } = useContext(LanguageContext);
   const [textSize, setTextSize] = useState(16);
   const [notifications, setNotifications] = useState(true);
-
+  
   const showPrivacyAlert = () => {
     Alert.alert(
       language === 'shqip' ? 'Siguria dhe Privatësia' : 'Security & Privacy',
@@ -17,6 +17,28 @@ export default function SettingsTab() {
         ? 'Aplikacioni është i sigurt. Të dhënat tuaja ruhen me kujdes.'
         : 'This app is secure. Your data is protected.',
       [{ text: 'OK' }]
+    );
+  };
+
+  const handleLogout = () => {
+    Alert.alert(
+      language === 'shqip' ? 'A jeni të sigurt?' : 'Are you sure?',
+      language === 'shqip'
+        ? 'Nëse dilni, do të humbni të dhënat e pa ruajtura.'
+        : 'If you logout, you will lose any unsaved data.',
+      [
+        {
+          text: language === 'shqip' ? 'Jo' : 'No',
+          onPress: () => console.log('Cancel Logout'),
+        },
+        {
+          text: language === 'shqip' ? 'Po' : 'Yes',
+          onPress: () => {
+            // Mbyll aplikacionin kur përdoruesi klikonte "Yes"
+            BackHandler.exitApp(); // Ky do të mbyllë aplikacionin
+          },
+        },
+      ]
     );
   };
 
@@ -78,6 +100,12 @@ export default function SettingsTab() {
       <Text style={[styles.quote, darkMode && styles.darkText]}>
         {language === 'shqip' ? '"Dija është fuqi!"' : '"Knowledge is power!"'}
       </Text>
+
+      {/* Butoni Logout */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name='log-out-outline' size={24} color='#fff' />
+        <Text style={styles.logoutText}>{language === 'shqip' ? 'Dalje' : 'Logout'}</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -129,6 +157,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   privacyText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 10,
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FF3B30',  // Red color for logout
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  logoutText: {
     color: '#fff',
     fontSize: 16,
     marginLeft: 10,

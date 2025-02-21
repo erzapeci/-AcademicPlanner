@@ -114,7 +114,7 @@ const GradeCalculator = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        <Ionicons name="calculate-outline" size={28} color="#2196F3" /> Grade Calculator
+        <Ionicons name="calculate-outline" size={28} color="#2196F3" /> Llogaritësi i notave
       </Text>
       
       <FlatList
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
   modalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
     justifyContent: 'center',
   },
   modalIcon: {
